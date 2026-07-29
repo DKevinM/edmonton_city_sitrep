@@ -114,13 +114,14 @@ def load_community_aqhi(cfg, community):
     gridded blend estimate at the community's coordinates."""
     lat, lon = float(community['latitude']), float(community['longitude'])
     radius = float(cfg['air_quality'].get('search_radius_km', 15))
+    base = {'name': community['name'], 'latitude': lat, 'longitude': lon}
     station = _nearest_station(cfg, lat, lon, radius)
     if station:
-        return {'name': community['name'], 'kind': 'station', **station}
+        return {**base, 'kind': 'station', **station}
     blend = _blend_estimate(cfg, lat, lon)
     if blend and blend.get('status') == 'ok':
         return {
-            'name': community['name'],
+            **base,
             'kind': 'estimate',
             'status': 'ok',
             'aqhi': round(blend['value'], 1) if blend['value'] is not None else None,
@@ -128,7 +129,7 @@ def load_community_aqhi(cfg, community):
             'confidence': blend.get('confidence'),
             'timestamp': blend.get('timestamp'),
         }
-    return {'name': community['name'], 'kind': 'unavailable', 'status': 'missing', 'aqhi': None, 'plus_3h': None}
+    return {**base, 'kind': 'unavailable', 'status': 'missing', 'aqhi': None, 'plus_3h': None}
 
 
 def load_all_communities(cfg):

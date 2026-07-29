@@ -39,9 +39,23 @@ air_quality:
   current_source: "/opt/airquality/github/AB_datapull/data/output/aqhi_station_forecast_3h.csv"
   forecast_source: "/opt/airquality/github/AB_datapull/data/output/aqhi_station_forecast_3h.csv"
   blend_grid_file: "/opt/airquality/github/AB_datapull/data/output/AQHI_Alberta_blend.geojson"
+  firesmoke_current_file: "/opt/airquality/github/AB_datapull/data/output/firesmoke_now.geojson"
   fallback_current_file: data/sample/aqhi_current.geojson
   fallback_forecast_file: data/sample/aqhi_forecast.json
   search_radius_km: 8
+
+map:
+  half_width_km: 55
+
+# FIRMS_API_KEY must be set as an environment variable (see /opt/airquality/config/intelligence.env),
+# never committed here.
+firms:
+  base_url: "https://firms.modaps.eosdis.nasa.gov"
+  source: "VIIRS_SNPP_NRT"
+  radius_km: 300
+  cluster_km: 10
+  min_confidence: 0.30
+  day_range: 2
 
 thresholds:
   aqhi: {moderate: 4, high: 7, extreme: 10.01}
