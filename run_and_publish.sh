@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+# Runs hourly via cron; only proceeds at the target local shift-change hours.
+# Self-checking in local time (rather than hardcoding UTC cron minutes) means
+# this stays correct through DST and needs no changes if Alberta's time-change
+# rules shift in the future.
+TARGET_HOURS="05 12 18"
+CURRENT_HOUR=$(TZ=America/Edmonton date +%H)
+if [[ ! " $TARGET_HOURS " =~ " $CURRENT_HOUR " ]]; then
+    exit 0
+fi
+
 cd /opt/airquality/github/edmonton_city_sitrep
 source .venv/bin/activate
 set -a
