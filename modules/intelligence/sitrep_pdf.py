@@ -67,7 +67,7 @@ def _aqhi_scale_bar():
     return f"<div class='aqhi-scale'><div class='aqhi-cells'>{cells}</div><div class='aqhi-bands'>{bands}</div></div>"
 
 
-def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, snapshots, generated_at):
+def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bullets, snapshots, generated_at):
     tz = cfg['project'].get('timezone', 'America/Edmonton')
 
     edmonton = next((c for c in communities if c['name'] == 'Edmonton'), communities[0])
@@ -102,9 +102,10 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, snapshots, 
         wx_section = "<section class='panel okbox'><p>No active Environment Canada weather alerts for the Edmonton region.</p></section>"
 
     smoke_items = ''.join(f'<li>{b}</li>' for b in smoke_bullets)
-    firesmoke_img = f"<img class='snapfig' src='data:image/png;base64,{_b64(snapshots['firesmoke_path'])}'/>" if snapshots.get('firesmoke_path') else "<p style='color:#6c757d;font-size:10px'>Live smoke map snapshot unavailable for this run.</p>"
-    livemap_img = f"<img class='snapfig' src='data:image/png;base64,{_b64(snapshots['livemap_path'])}'/>" if snapshots.get('livemap_path') else "<p style='color:#6c757d;font-size:10px'>Live map snapshot unavailable for this run.</p>"
+    firesmoke_img = f"<a href='{LIVE_MAP_URL}'><img class='snapfig' src='data:image/png;base64,{_b64(snapshots['firesmoke_path'])}'/></a>" if snapshots.get('firesmoke_path') else "<p style='color:#6c757d;font-size:10px'>Live smoke map snapshot unavailable for this run.</p>"
+    livemap_img = f"<a href='{LIVE_MAP_URL}'><img class='snapfig' src='data:image/png;base64,{_b64(snapshots['livemap_path'])}'/></a>" if snapshots.get('livemap_path') else "<p style='color:#6c757d;font-size:10px'>Live map snapshot unavailable for this run.</p>"
 
+    weather_items = ''.join(f'<li>{b}</li>' for b in weather_bullets)
     tzab = tz_abbrev(tz)
     wx_rows = ''
     for r in (weather.get('hourly') or [])[:6]:
@@ -148,6 +149,8 @@ ul {{ margin:4px 0 0; padding-left:16px; }}
 li {{ margin-bottom:3px; }}
 .snaprow {{ display:flex; justify-content:center; margin-top:6px; }}
 .snapfig {{ max-width:60%; border-radius:8px; display:block; }}
+.snapcaption {{ text-align:center; font-size:9px; color:#4a5a68; margin-top:3px; }}
+a {{ text-decoration:none; color:inherit; }}
 footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-size:9.5px; color:#4a5a68; }}
 </style></head>
 <body>
@@ -193,6 +196,7 @@ footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-si
   <h2>Wildfire Smoke</h2>
   <ul>{smoke_items}</ul>
   <div class="snaprow">{firesmoke_img}</div>
+  <div class="snapcaption">Click the map to open the live interactive version.</div>
 </section>
 
 <section class="panel">
@@ -205,6 +209,7 @@ footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-si
 
 <section class="panel">
   <h2>Weather Forecast <small style="font-weight:normal">(next 6 hours, {tzab})</small></h2>
+  <ul>{weather_items}</ul>
   <table class="wx">
     <tr><th>Time</th><th>Temp</th><th>Precip chance</th><th>Precip</th><th>Gust</th><th>Sky</th></tr>
     {wx_rows}
@@ -214,6 +219,7 @@ footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-si
 <section class="panel">
   <h2>Regional Map</h2>
   <div class="snaprow">{livemap_img}</div>
+  <div class="snapcaption">Click the map to open the live interactive version.</div>
 </section>
 
 <footer>
@@ -222,7 +228,7 @@ footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-si
 </body></html>'''
 
 
-def build_pdf(cfg, communities, wx_alerts, smoke_bullets, weather, snapshots, generated_at, out_path):
-    html = render_html(cfg, communities, wx_alerts, smoke_bullets, weather, snapshots, generated_at)
+def build_pdf(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bullets, snapshots, generated_at, out_path):
+    html = render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bullets, snapshots, generated_at)
     HTML(string=html, base_url=str(ROOT)).write_pdf(out_path)
     return out_path

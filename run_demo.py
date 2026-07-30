@@ -11,7 +11,7 @@ from modules.alerts.service import load_weather_alerts
 from modules.fire.service import load_hotspots
 from modules.intelligence import map_layers
 from modules.intelligence.live_map_snapshot import capture_snapshots
-from modules.intelligence.narrative import build_wildfire_smoke_bullets
+from modules.intelligence.narrative import build_wildfire_smoke_bullets, build_weather_bullets
 from modules.intelligence.sitrep_pdf import build_pdf
 from modules.weather.service import load_weather
 
@@ -34,6 +34,7 @@ def main():
         wx_alerts_result = load_weather_alerts(cfg)
         wx_alerts = wx_alerts_result.get('alerts') or [] if wx_alerts_result.get('status') == 'ok' else []
         weather = load_weather(cfg)
+        weather_bullets = build_weather_bullets(cfg, weather)
 
         firesmoke_cells = map_layers.load_firesmoke(cfg) or []
         pm25_here = map_layers.nearest_pm25(firesmoke_cells, float(city['latitude']), float(city['longitude']))
@@ -51,7 +52,7 @@ def main():
         generated_at = nominal.isoformat(timespec='seconds')
 
         write_json(out / 'sitrep_data.json', {'generated_at': generated_at, 'actual_run_at': now.isoformat(timespec='seconds'), 'communities': communities, 'wx_alerts': wx_alerts_result, 'pm25_here': pm25_here, 'fire': fire_result, 'snapshots': {k: str(v) if v else None for k, v in snapshots.items() if k != 'status'}})
-        build_pdf(cfg, communities, wx_alerts, smoke_bullets, weather, snapshots, generated_at, out / 'sitrep.pdf')
+        build_pdf(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bullets, snapshots, generated_at, out / 'sitrep.pdf')
 
         print(f"Sit rep PDF: {out / 'sitrep.pdf'}")
         return 0

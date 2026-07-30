@@ -1,3 +1,41 @@
+from core.geometry import compass
+from core.timefmt import format_short
+from modules.weather.metrics import summarize
+
+
+def f(v, d=0):
+    return 'unavailable' if v is None else f'{v:.{d}f}'
+
+
+def build_weather_bullets(cfg, weather):
+    tz = cfg['project'].get('timezone', 'America/Edmonton')
+    c = weather.get('current') or {}
+    hourly = weather.get('hourly') or []
+    bullets = []
+
+    if c.get('temperature_c') is not None:
+        bullets.append(
+            f"Currently in Edmonton, temperature is {f(c.get('temperature_c'), 1)}°C and feels near {f(c.get('apparent_temperature_c'), 1)}°C. "
+            f"Winds are {f(c.get('wind_speed_kmh'))} km/h from the {compass(c.get('wind_direction_deg'))}, gusting near {f(c.get('wind_gust_kmh'))} km/h."
+        )
+    else:
+        bullets.append('Current weather observations were unavailable for this run.')
+
+    if hourly:
+        m = summarize(hourly)
+        if m.get('thunderstorm_possible'):
+            bullets.append(f"Thunderstorm conditions appear in the forecast beginning around {format_short(m.get('first_thunderstorm_hour'), tz)}.")
+        elif (m.get('max_precipitation_probability_pct') or 0) >= 40:
+            bullets.append(f"Precipitation probability reaches approximately {f(m.get('max_precipitation_probability_pct'))}% over the next {len(hourly)} hours.")
+        if (m.get('max_wind_gust_kmh') or 0) >= 45:
+            bullets.append(f"Wind gusts up to {f(m.get('max_wind_gust_kmh'))} km/h are expected over the next {len(hourly)} hours.")
+        temps = [r['temperature_c'] for r in hourly if r.get('temperature_c') is not None]
+        if temps:
+            bullets.append(f"Temperatures over the next {len(hourly)} hours are expected to range from {f(min(temps), 1)}°C to {f(max(temps), 1)}°C.")
+
+    return bullets
+
+
 def pm25_label(v):
     if v is None:
         return 'unavailable'
