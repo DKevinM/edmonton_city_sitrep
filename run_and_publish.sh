@@ -5,7 +5,7 @@ set -e
 # Self-checking in local time (rather than hardcoding UTC cron minutes) means
 # this stays correct through DST and needs no changes if Alberta's time-change
 # rules shift in the future.
-TARGET_HOURS="05 12 18"
+TARGET_HOURS="05 12 17"
 CURRENT_HOUR=$(TZ=America/Edmonton date +%H)
 if [[ ! " $TARGET_HOURS " =~ " $CURRENT_HOUR " ]]; then
     exit 0

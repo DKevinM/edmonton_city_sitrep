@@ -4,48 +4,30 @@ project:
 
 data_mode: auto
 
-# Center point used for the weather-alert bbox lookup (Edmonton City Hall).
+# Center point used for the weather forecast and weather-alert bbox lookup
+# (Edmonton City Hall).
 city:
   name: City of Edmonton
   latitude: 53.5444
   longitude: -113.4909
 
-contact:
-  name: "Gary Redmond, ACA Executive Director"
-  phone: "780.935.4279"
-
-# Same five communities as the legacy ACA sit rep. Each is checked against the
-# official AQHI station feed first (search_radius_km); if no official station
-# is within range, we fall back to the gridded blend estimate at these
-# coordinates and label it clearly as an estimate, not a station reading.
+# Current + forecast AQHI for these five communities comes directly from the
+# Government of Alberta's live odata feed (see modules/air_quality/service.py)
+# — the same feed https://dkevinm.github.io/ACA_AQHI/ uses. No fallback/estimate
+# logic needed here since that feed already covers all five directly.
 communities:
   - name: Edmonton
-    latitude: 53.5444
-    longitude: -113.4909
   - name: Strathcona County
-    latitude: 53.5412
-    longitude: -113.3183
   - name: St. Albert
-    latitude: 53.6305
-    longitude: -113.6256
   - name: Enoch
-    latitude: 53.4981
-    longitude: -113.7607
   - name: Leduc
-    latitude: 53.2594
-    longitude: -113.5492
+
+weather:
+  forecast_hours: 6
+  timeout_seconds: 20
 
 air_quality:
-  current_source: "/opt/airquality/github/AB_datapull/data/output/aqhi_station_forecast_3h.csv"
-  forecast_source: "/opt/airquality/github/AB_datapull/data/output/aqhi_station_forecast_3h.csv"
-  blend_grid_file: "/opt/airquality/github/AB_datapull/data/output/AQHI_Alberta_blend.geojson"
   firesmoke_current_file: "/opt/airquality/github/AB_datapull/data/output/firesmoke_now.geojson"
-  fallback_current_file: data/sample/aqhi_current.geojson
-  fallback_forecast_file: data/sample/aqhi_forecast.json
-  search_radius_km: 8
-
-map:
-  half_width_km: 55
 
 # FIRMS_API_KEY must be set as an environment variable (see /opt/airquality/config/intelligence.env),
 # never committed here.
@@ -56,6 +38,3 @@ firms:
   cluster_km: 10
   min_confidence: 0.30
   day_range: 2
-
-thresholds:
-  aqhi: {moderate: 4, high: 7, extreme: 10.01}
