@@ -217,7 +217,7 @@ footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-si
 </section>
 
 <section class="panel">
-  <h2>Regional Map</h2>
+  <h2>Edmonton AQHI Map</h2>
   <div class="snaprow">{livemap_img}</div>
   <div class="snapcaption">Click the map to open the live interactive version.</div>
 </section>
