@@ -151,7 +151,6 @@ li {{ margin-bottom:3px; }}
 .snapfig {{ max-width:92%; max-height:120mm; border-radius:8px; display:block; }}
 .snapcaption {{ text-align:center; font-size:9px; color:#4a5a68; margin-top:3px; }}
 a {{ text-decoration:none; color:inherit; }}
-footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-size:9.5px; color:#4a5a68; }}
 </style></head>
 <body>
 <header>
@@ -225,10 +224,6 @@ footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-si
   <div class="snaprow">{livemap_img}</div>
   <div class="snapcaption">Click the map to open the live interactive version.</div>
 </section>
-
-<footer>
-  Prepared by Alberta Capital Airshed. Beta decision-support product. For the live interactive map, visit {LIVE_MAP_URL}
-</footer>
 </body></html>'''
 
 
