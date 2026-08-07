@@ -209,7 +209,7 @@ a {{ text-decoration:none; color:inherit; }}
   <div class="snapcaption">Click the map to open the live interactive version.</div>
 </section>
 
-<section class="panel">
+<section class="panel" style="break-before:page">
   <h2>AQHI by Community — Overall Regional Risk: {RISK_LABEL.get(overall_risk, overall_risk)}</h2>
   <table class="comm">
     <tr><th>Community</th><th>Current AQHI</th><th>Last Updated</th><th>Forecast Today</th><th>Forecast Tonight</th><th>Forecast Tomorrow</th></tr>
