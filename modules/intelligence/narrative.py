@@ -65,6 +65,7 @@ def _circular_mean_deg(degrees):
 
 
 _COMPASS_DEG = {'N': 0, 'NE': 45, 'E': 90, 'SE': 135, 'S': 180, 'SW': 225, 'W': 270, 'NW': 315}
+CALM_WIND_KMH = 5  # below this, direction is essentially noise — can't claim a transport direction
 
 
 def build_wind_fire_bullets(fire_result, weather):
@@ -94,21 +95,28 @@ def build_wind_fire_bullets(fire_result, weather):
     dominant_dir, dominant_count = max(counts.items(), key=lambda kv: kv[1])
     fire_bearing = _COMPASS_DEG.get(dominant_dir)
 
-    wind_from = compass(wind_dir)
-    wind_toward = compass((wind_dir + 180) % 360)
     plural = dominant_count != 1
-    bullets = [
-        f"{dominant_count} active fire detection{'s' if plural else ''} {'are' if plural else 'is'} to the {dominant_dir} of Edmonton. "
-        f"Surface winds are currently {f(wind_speed)} km/h from the {wind_from}, moving toward the {wind_toward}."
-    ]
+    calm = wind_speed is None or wind_speed < CALM_WIND_KMH
 
-    if fire_bearing is not None:
-        diff = abs(fire_bearing - wind_dir) % 360
-        diff = min(diff, 360 - diff)
-        if diff <= 45:
-            bullets.append(f"This is roughly aligned with the fires to the {dominant_dir}, so smoke transport toward Edmonton from that direction is plausible based on surface winds.")
-        else:
-            bullets.append(f"Current surface winds are not aligned with transport from the {dominant_dir}, so smoke reaching Edmonton from these fires is less likely right now based on surface winds alone.")
+    if calm:
+        bullets = [
+            f"{dominant_count} active fire detection{'s' if plural else ''} {'are' if plural else 'is'} to the {dominant_dir} of Edmonton. "
+            f"Surface winds are currently calm ({f(wind_speed)} km/h), so current wind direction doesn't provide a reliable read on smoke transport toward the city."
+        ]
+    else:
+        wind_from = compass(wind_dir)
+        wind_toward = compass((wind_dir + 180) % 360)
+        bullets = [
+            f"{dominant_count} active fire detection{'s' if plural else ''} {'are' if plural else 'is'} to the {dominant_dir} of Edmonton. "
+            f"Surface winds are currently {f(wind_speed)} km/h from the {wind_from}, moving toward the {wind_toward}."
+        ]
+        if fire_bearing is not None:
+            diff = abs(fire_bearing - wind_dir) % 360
+            diff = min(diff, 360 - diff)
+            if diff <= 45:
+                bullets.append(f"This is roughly aligned with the fires to the {dominant_dir}, so smoke transport toward Edmonton from that direction is plausible based on surface winds.")
+            else:
+                bullets.append(f"Current surface winds are not aligned with transport from the {dominant_dir}, so smoke reaching Edmonton from these fires is less likely right now based on surface winds alone.")
 
     hourly = (weather or {}).get('hourly') or []
     mean_forecast_dir = _circular_mean_deg([h.get('wind_direction_deg') for h in hourly if h.get('wind_direction_deg') is not None])

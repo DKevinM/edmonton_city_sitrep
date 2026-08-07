@@ -218,8 +218,8 @@ a {{ text-decoration:none; color:inherit; }}
 <section class="panel">
   <h2>Edmonton AQHI Map</h2>
   <ul>
-    <li>The shaded grid is an interpolated AQHI estimate across the region — not just the point readings at individual monitoring stations.</li>
-    <li>It blends official Government of Alberta stations with community PurpleAir sensors, giving denser spatial coverage than official stations provide alone, particularly between monitors.</li>
+    <li>The shaded grid is an interpolated AQHI estimate across the region, not just the point readings at individual monitoring stations.</li>
+    <li>It blends airshed-operated stations with community PurpleAir sensors, giving denser spatial coverage than stations alone provide, particularly between monitors.</li>
   </ul>
   <div class="snaprow">{livemap_img}</div>
   <div class="snapcaption">Click the map to open the live interactive version.</div>
