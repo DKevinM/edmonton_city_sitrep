@@ -97,6 +97,7 @@ def build_wind_fire_bullets(fire_result, weather):
 
     plural = dominant_count != 1
     calm = wind_speed is None or wind_speed < CALM_WIND_KMH
+    wind_from = compass(wind_dir)
 
     if calm:
         bullets = [
@@ -104,7 +105,6 @@ def build_wind_fire_bullets(fire_result, weather):
             f"Surface winds are currently calm ({f(wind_speed)} km/h), so current wind direction doesn't provide a reliable read on smoke transport toward the city."
         ]
     else:
-        wind_from = compass(wind_dir)
         wind_toward = compass((wind_dir + 180) % 360)
         bullets = [
             f"{dominant_count} active fire detection{'s' if plural else ''} {'are' if plural else 'is'} to the {dominant_dir} of Edmonton. "
