@@ -39,7 +39,7 @@ def main():
         firesmoke_cells = map_layers.load_firesmoke(cfg) or []
         pm25_here = map_layers.nearest_pm25(firesmoke_cells, float(city['latitude']), float(city['longitude']))
         fire_result = load_hotspots(cfg)
-        smoke_bullets = build_wildfire_smoke_bullets(pm25_here, fire_result)
+        smoke_bullets = build_wildfire_smoke_bullets(pm25_here, fire_result, weather)
 
         try:
             snapshots = capture_snapshots(city, out)
