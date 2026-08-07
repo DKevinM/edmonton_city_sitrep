@@ -34,6 +34,20 @@ def _aqhi_color(v):
     return AQHI_VALUE_COLOR.get(round(n), AQHI_UNAVAILABLE_COLOR)
 
 
+def _aqhi_text_color(v):
+    """White text only for the genuinely dark bands (7-10, 10+) — the
+    lighter bands (1-6, especially the yellow/gold 4-5) need dark text or
+    they're unreadable. Same 7+ cutoff the scale bar already uses via
+    AQHI_SCALE_DARK_BG, applied consistently everywhere else too."""
+    if v is None:
+        return '#1a2733'
+    try:
+        n = float(v)
+    except (TypeError, ValueError):
+        return '#1a2733'
+    return '#fff' if (n > 10 or round(n) >= 7) else '#1a2733'
+
+
 def _fmt_aqhi(v):
     if v is None:
         return '—'
@@ -88,7 +102,7 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bul
             continue
         community_rows += (
             f"<tr><td>{c['name']}</td>"
-            f"<td style='background:{_aqhi_color(c.get('aqhi'))};color:#fff;font-weight:bold;text-align:center'>{_fmt_aqhi(c.get('aqhi'))}</td>"
+            f"<td style='background:{_aqhi_color(c.get('aqhi'))};color:{_aqhi_text_color(c.get('aqhi'))};font-weight:bold;text-align:center'>{_fmt_aqhi(c.get('aqhi'))}</td>"
             f"<td style='font-size:9.5px'>{c.get('reading_date', '—')}</td>"
             f"<td style='background:{_aqhi_color(c.get('forecast_today')) if c.get('forecast_today') not in (None, 'N/A', 'None') else '#fff'};text-align:center'>{_fmt_forecast(c.get('forecast_today'))}</td>"
             f"<td style='background:{_aqhi_color(c.get('forecast_tonight')) if c.get('forecast_tonight') not in (None, 'N/A', 'None') else '#fff'};text-align:center'>{_fmt_forecast(c.get('forecast_tonight'))}</td>"
@@ -129,7 +143,7 @@ header img.logo {{ height:52px; }}
 header .meta {{ text-align:right; font-size:12px; color:#4a5a68; }}
 section.panel {{ margin-bottom:11px; }}
 .current-aqhi {{ display:flex; align-items:center; gap:16px; background:#f2f6fa; border-radius:8px; padding:10px 14px; margin-bottom:8px; }}
-.current-aqhi .big {{ font-size:34px; font-weight:bold; color:{_aqhi_color(edmonton.get('aqhi'))}; }}
+.current-aqhi .big {{ font-size:34px; font-weight:bold; color:{_aqhi_text_color(edmonton.get('aqhi'))}; background:{_aqhi_color(edmonton.get('aqhi'))}; border-radius:8px; padding:2px 16px; }}
 .current-aqhi .lbl {{ font-size:11px; color:#4a5a68; }}
 table.msg, table.detail, table.comm, table.wx {{ width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:2px;}}
 table.msg th, table.msg td, table.detail th, table.detail td, table.comm th, table.comm td, table.wx th, table.wx td {{ border:1px solid #c6d2dc; padding:6px 8px; text-align:left; vertical-align:top; }}
@@ -177,7 +191,7 @@ a {{ text-decoration:none; color:inherit; }}
     <tr><th>Reading Date/Time</th><th>Current AQHI</th><th>Forecast Today</th><th>Forecast Tonight</th><th>Forecast Tomorrow</th></tr>
     <tr>
       <td>{_v(edmonton.get('reading_date'))}</td>
-      <td style="background:{_aqhi_color(edmonton.get('aqhi'))};color:#fff;font-weight:bold;text-align:center">{_fmt_aqhi(edmonton.get('aqhi'))}</td>
+      <td style="background:{_aqhi_color(edmonton.get('aqhi'))};color:{_aqhi_text_color(edmonton.get('aqhi'))};font-weight:bold;text-align:center">{_fmt_aqhi(edmonton.get('aqhi'))}</td>
       <td style="text-align:center">{_fmt_forecast(edmonton.get('forecast_today'))}</td>
       <td style="text-align:center">{_fmt_forecast(edmonton.get('forecast_tonight'))}</td>
       <td style="text-align:center">{_fmt_forecast(edmonton.get('forecast_tomorrow'))}</td>
