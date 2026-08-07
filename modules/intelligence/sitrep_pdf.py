@@ -148,7 +148,7 @@ table.detail {{ margin-bottom:10px; }}
 ul {{ margin:4px 0 0; padding-left:16px; }}
 li {{ margin-bottom:3px; }}
 .snaprow {{ display:flex; justify-content:center; margin-top:6px; }}
-.snapfig {{ max-width:60%; border-radius:8px; display:block; }}
+.snapfig {{ max-width:92%; max-height:120mm; border-radius:8px; display:block; }}
 .snapcaption {{ text-align:center; font-size:9px; color:#4a5a68; margin-top:3px; }}
 a {{ text-decoration:none; color:inherit; }}
 footer {{ border-top:1px solid #c6d2dc; padding-top:5px; margin-top:4px; font-size:9.5px; color:#4a5a68; }}
