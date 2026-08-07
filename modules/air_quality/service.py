@@ -1,5 +1,7 @@
 import requests
 
+from core.aqhi import risk_from_aqhi
+
 ODATA_URL = "https://data.environment.alberta.ca/EdwServices/aqhi/odata/CommunityAqhis?$format=json"
 
 # Maps our community labels to the AEPA feed's CommunityName values.
@@ -11,18 +13,12 @@ COMMUNITY_API_NAME = {
     'Leduc': 'Leduc (Sensor)',
 }
 
-RISK_MAP = {'low': 'LOW', 'moderate': 'MODERATE', 'high': 'HIGH', 'very high': 'EXTREME'}
-
 
 def num(v):
     try:
         return float(v)
     except (TypeError, ValueError):
         return None
-
-
-def _risk(label):
-    return RISK_MAP.get((label or '').strip().lower(), 'UNKNOWN')
 
 
 def fetch_community_feed(timeout=20):
@@ -46,17 +42,19 @@ def load_all_communities(cfg):
         if not row:
             out.append({'name': name, 'kind': 'unavailable', 'status': 'missing', 'aqhi': None, 'risk': 'UNKNOWN'})
             continue
+        aqhi = num(row.get('Aqhi'))
         out.append({
             'name': name,
             'kind': 'aepa',
             'status': 'ok',
-            'aqhi': num(row.get('Aqhi')),
+            'aqhi': aqhi,
             'forecast_today': row.get('ForecastToday'),
             'forecast_tonight': row.get('ForecastTonight'),
             'forecast_tomorrow': row.get('ForecastTomorrow'),
             'reading_date': row.get('ReadingDate'),
-            'risk': _risk(row.get('HealthRisk')),
-            'general_message': row.get('GeneralPopulationMessage'),
-            'at_risk_message': row.get('AtRiskMessage'),
+            # Classified from the numeric AQHI ourselves — the feed's own
+            # HealthRisk/message fields have been observed not matching its
+            # own Aqhi number (e.g. HealthRisk "Low" at Aqhi 4-5).
+            'risk': risk_from_aqhi(aqhi),
         })
     return out

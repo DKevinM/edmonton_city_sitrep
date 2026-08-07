@@ -88,10 +88,7 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bul
     known_risk = [c['risk'] for c in communities if c['risk'] != 'UNKNOWN']
     overall_risk = max(known_risk, key=lambda r: {'LOW': 0, 'MODERATE': 1, 'HIGH': 2, 'EXTREME': 3}[r]) if known_risk else 'UNKNOWN'
 
-    if edmonton.get('general_message') and edmonton.get('at_risk_message'):
-        msgs = {'general': edmonton['general_message'], 'at_risk': edmonton['at_risk_message']}
-    else:
-        msgs = eccc_messages(edmonton['risk']) or eccc_messages('LOW')
+    msgs = eccc_messages(edmonton['risk']) or eccc_messages('LOW')
 
     logo_b64 = _b64(ASSETS / 'aca_logo.jpg')
 
