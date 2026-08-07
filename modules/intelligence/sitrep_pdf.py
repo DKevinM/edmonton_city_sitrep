@@ -130,7 +130,7 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bul
         )
 
     return f'''<!doctype html><html><head><meta charset="utf-8"><style>
-@page {{ size: Letter; margin: 15mm 16mm; }}
+@page {{ size: Letter; margin: 12mm 13mm; }}
 body {{ font-family: Arial, Helvetica, sans-serif; color:#1a2733; font-size:11.5px; }}
 h1 {{ font-size:20px; margin:0 0 2px; color:#0f6cbd; }}
 h2 {{ font-size:13.5px; margin:0 0 8px; color:#0f6cbd; border-bottom:2px solid #0f6cbd; padding-bottom:3px; }}
@@ -159,7 +159,7 @@ table.detail {{ margin-bottom:10px; }}
 ul {{ margin:4px 0 0; padding-left:16px; }}
 li {{ margin-bottom:3px; }}
 .snaprow {{ display:flex; justify-content:center; margin-top:6px; }}
-.snapfig {{ max-width:92%; max-height:120mm; border-radius:8px; display:block; }}
+.snapfig {{ max-width:92%; max-height:104mm; border-radius:8px; display:block; }}
 .snapcaption {{ text-align:center; font-size:9px; color:#4a5a68; margin-top:3px; }}
 a {{ text-decoration:none; color:inherit; }}
 </style></head>
