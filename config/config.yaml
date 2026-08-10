@@ -13,14 +13,26 @@ city:
 
 # Current + forecast AQHI for these five communities comes directly from the
 # Government of Alberta's live odata feed (see modules/air_quality/service.py)
-# — the same feed https://dkevinm.github.io/ACA_AQHI/ uses. No fallback/estimate
-# logic needed here since that feed already covers all five directly.
+# — the same feed https://dkevinm.github.io/ACA_AQHI/ uses. lat/lon are only
+# used for the PurpleAir eAQHI fail-safe when that feed is missing a community
+# (e.g. an AEP outage) — approximate community-centre coordinates are fine for
+# a 25-30km sensor search radius.
 communities:
   - name: Edmonton
+    latitude: 53.5444
+    longitude: -113.4909
   - name: Strathcona County
+    latitude: 53.5170
+    longitude: -113.3195
   - name: St. Albert
+    latitude: 53.6303
+    longitude: -113.6256
   - name: Enoch
+    latitude: 53.5350
+    longitude: -113.6850
   - name: Leduc
+    latitude: 53.2594
+    longitude: -113.5492
 
 weather:
   forecast_hours: 6
@@ -28,6 +40,8 @@ weather:
 
 air_quality:
   firesmoke_current_file: "/opt/airquality/github/AB_datapull/data/output/firesmoke_now.geojson"
+  purpleair_source: "/opt/airquality/github/AB_datapull/data/AB_PM25_map.json"
+  search_radius_km: 30
 
 # FIRMS_API_KEY must be set as an environment variable (see /opt/airquality/config/intelligence.env),
 # never committed here.
