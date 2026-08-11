@@ -28,6 +28,14 @@ def risk_from_aqhi(v):
         return 'HIGH'
     return 'EXTREME'
 
+def compute_aqhi(o3_ppb,no2_ppb,pm25_ugm3):
+    """Standard Health Canada AQHI formula, same as used in
+    AB_datapull/scripts/build_eAQHI.py — used for the mds_direct fail-safe,
+    where real O3/NO2/PM2.5 sensor readings are available (not just PM2.5)."""
+    import math
+    val=(1000.0/10.4)*(math.exp(0.000537*float(o3_ppb))+math.exp(0.000871*float(no2_ppb))+math.exp(0.000487*float(pm25_ugm3))-3.0)
+    return max(1,min(int(round(val)),10))
+
 def pm25_to_eaqhi(pm):
     """PM2.5-only estimated-AQHI proxy, same breakpoints as SK_datapull's
     pm25_to_eaqhi — used when official station AQHI is unavailable and we

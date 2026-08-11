@@ -94,6 +94,17 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bul
 
     community_rows = ''
     for c in communities:
+        if c['status'] == 'mds_direct':
+            est = c.get('estimate') or {}
+            note = (f"Official feed unavailable — real reading from {est.get('station_name','nearby station')}'s own airshed telemetry"
+                    if est.get('pm25_source') == 'MDS' else
+                    f"Official feed unavailable — {est.get('station_name','nearby station')} telemetry for gases, PM2.5 estimated from PurpleAir")
+            community_rows += (
+                f"<tr><td>{c['name']}</td>"
+                f"<td style='background:{_aqhi_color(c.get('aqhi'))};color:{_aqhi_text_color(c.get('aqhi'))};font-weight:bold;text-align:center'>{_fmt_aqhi(c.get('aqhi'))}</td>"
+                f"<td colspan='4' style='font-size:9.5px;color:#6c757d'>{note}</td></tr>"
+            )
+            continue
         if c['status'] == 'estimated':
             est = c.get('estimate') or {}
             community_rows += (
