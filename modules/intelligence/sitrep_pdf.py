@@ -186,7 +186,7 @@ a {{ text-decoration:none; color:inherit; }}
 <header>
   <img class="logo" src="data:image/jpeg;base64,{logo_b64}"/>
   <div class="title">
-    <h1>Air Quality Situation Report</h1>
+    <h1>Air Quality Conditions Report</h1>
     <div>City of Edmonton</div>
   </div>
   <div class="meta">
