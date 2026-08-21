@@ -152,6 +152,7 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bul
 @page {{ size: Letter; margin: 12mm 13mm; }}
 body {{ font-family: Arial, Helvetica, sans-serif; color:#1a2733; font-size:11.5px; }}
 h1 {{ font-size:20px; margin:0 0 2px; color:#0f6cbd; }}
+header .subtitle {{ font-size:13px; font-weight:600; color:#0f6cbd; margin:0 0 2px; }}
 h2 {{ font-size:13.5px; margin:0 0 8px; color:#0f6cbd; border-bottom:2px solid #0f6cbd; padding-bottom:3px; }}
 header {{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }}
 header .title {{ flex:1; margin-left:16px; }}
@@ -186,7 +187,8 @@ a {{ text-decoration:none; color:inherit; }}
 <header>
   <img class="logo" src="data:image/jpeg;base64,{logo_b64}"/>
   <div class="title">
-    <h1>Air Quality Conditions Report</h1>
+    <h1>Air Report</h1>
+    <div class="subtitle">Ambient Air Quality Meteorology Conditions Report</div>
     <div>City of Edmonton</div>
   </div>
   <div class="meta">
