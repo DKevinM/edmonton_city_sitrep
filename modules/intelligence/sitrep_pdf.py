@@ -127,9 +127,9 @@ def render_html(cfg, communities, wx_alerts, smoke_bullets, weather, weather_bul
 
     if wx_alerts:
         wx_html = ''.join(f"<div class='alert'><b>{x.get('name', '').title()}</b> — {x.get('region', '')}</div>" for x in wx_alerts)
-        wx_section = f"<section class='panel alertbox'><h2>Active Environment Canada Alerts</h2>{wx_html}</section>"
+        wx_section = f"<section class='panel alertbox'><h2>Active ECCC Alerts</h2>{wx_html}</section>"
     else:
-        wx_section = "<section class='panel okbox'><p>No active Environment Canada weather alerts for the Edmonton region.</p></section>"
+        wx_section = "<section class='panel okbox'><p>No active ECCC weather alerts for the Edmonton region.</p></section>"
 
     smoke_items = ''.join(f'<li>{b}</li>' for b in smoke_bullets)
     firesmoke_img = f"<a href='{LIVE_MAP_URL}'><img class='snapfig' src='data:image/png;base64,{_b64(snapshots['firesmoke_path'])}'/></a>" if snapshots.get('firesmoke_path') else "<p style='color:#6c757d;font-size:10px'>Live smoke map snapshot unavailable for this run.</p>"
